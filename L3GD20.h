@@ -1,11 +1,11 @@
 /*
- * LS303D Library Header File
+ * L3GD20 Library Header File
  *
- * @file    LSM303D.h
+ * @file    L3GD20.h
  * @author  Ilia Sosner - March 27, 2020
- * @description   This file defines function prototypes for the LS303D Accelerometer/Magnotometer
- * Library. This library untilizes the Wire library for i2c communication. 
- * Functions include setting configuration registers, pulling X,Y,Z accelerometer and magnetometer data. 
+ * @description   This file defines function prototypes for the L3GD20 3-axis Gyroscope
+ * Library. This library utilizes the Wire library for i2c communication. 
+ * Functions include setting configuration registers, pulling X,Y,Z gyroscope data. 
  *
  *
  * https://github.com/iliasosner/quar-projects.git
@@ -13,7 +13,7 @@
  * Development environment specifics:
  * 	IDE: Arduino 1.8.12
  * 	Hardware Platform: Teensy 3.6
- * 	LS303D on GY89 Breakout
+ * 	L3GD20 on GY89 Breakout
  *
  * @section LICENSE
  * 
@@ -37,30 +37,28 @@
 
 #include <Wire.h>
 
-class LSM303D{
+class L3GD20{
 
 
 
     public:
 
             int   config(void); //set configuration registers and start data following
-            float Xa(void);//returns X accelerometer data in g's
-            float Ya(void);//returns Y accelerometer data in g's
-            float Za(void);//returns Z accelerometer data in g's
-            float Xm(void);//returns X Magnetometer Data in G's
-            float Ym(void);//returns Y Magnetometer Data in G's
-            float Zm(void);//returns Z Magnetometer Data in G's
+            float Xg(void);//returns X accelerometer data in g's
+            float Yg(void);//returns Y accelerometer data in g's
+            float Zg(void);//returns Z accelerometer data in g's
             float Temp(void);// returns Temperture of IC
             float mapf(int16_t, float, float, float , float ); ///internal scaling function that works with floats
         
         
         private:
-
-        int X0=0;
+int X0=0;
 int X1=0;
 int16_t X2=0;
 int16_t X4=0;
 float X3=0;
+int8_t X5=0;
 int16_t mask1=0x0800; ///b0000100000000000
 int16_t mask2=0x0FFF; ///b0000111111111111
+
 };

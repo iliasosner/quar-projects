@@ -64,13 +64,7 @@
 #define Temp_l 0x05
 #define Temp_h 0x06
 
-int X0=0;
-int X1=0;
-int16_t X2=0;
-int16_t X4=0;
-float X3=0;
-int16_t mask1=0x0800; ///b0000100000000000
-int16_t mask2=0x0FFF; ///b0000111111111111
+
 
 int LSM303D::config(){
 

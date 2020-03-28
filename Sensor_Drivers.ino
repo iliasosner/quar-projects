@@ -42,16 +42,19 @@
 //Addr: 0x6B ACK L3GD20 3-axis Gyroscope
 //Addr: 0x77 ACK
 #include "LSM303D.h"
+#include "L3GD20.h"
 
 
 
 LSM303D LSM;
+L3GD20 L3G;
 
 void setup() {
 
   Wire.begin(); //Join i2c bus
   Serial.begin(9600); //for Debugging monitor
   LSM.config();
+  L3G.config();
 
 }
 
@@ -59,7 +62,7 @@ void setup() {
 
 
 void loop() {
- 
+ /*
 Serial.print("X Accel: ");
 Serial.print( LSM.Xa());
 Serial.print("    Y Accel: ");
@@ -76,7 +79,16 @@ Serial.print( LSM.Zm());
 Serial.print("    Temp: ");
 Serial.println(LSM.Temp());
 delay(200);
+*/
 
+Serial.print("   X Gyro: ");
+Serial.print( L3G.Xg());
+Serial.print("    Y Gyro: ");
+Serial.print( L3G.Yg());
+Serial.print("    Z Gyro: ");
+Serial.print( L3G.Zg());
+Serial.print("    Temp: ");
+Serial.println(L3G.Temp());
 
 
 }
