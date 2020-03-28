@@ -1,11 +1,12 @@
 /*
- * Sensor Development Project
+ * LS303D Library Header File
  *
- * @file    Sensor_Drivers.h
+ * @file    LSM303D.h
  * @author  Ilia Sosner - March 27, 2020
- * @description   This file is intended for testing various sensor libraries. It initiaes communcations 
- * on the I2C and serial busses, pulls data from sensors, and displays it in the serial monitor.
- * 
+ * @description   This file defines function prototypes for the LS303D Accelerometer/Magnotometer
+ * Library. This library untilizes the Wire library for i2c communication. 
+ * Functions include setting configuration registers, pulling X,Y,Z accelerometer and magnetometer data. 
+ *
  *
  * https://github.com/iliasosner/quar-projects.git
  *
@@ -34,49 +35,24 @@
  * 
  */
 
+#include <Wire.h>
 
-
-//Created in quarantine on 25 March 2020
-//Ilia Sosner 
-//Addr: 0x1D ACK LSM303D 3-Axis Accelerometer and Magnetometer
-//Addr: 0x6B ACK L3GD20 3-axis Gyroscope
-//Addr: 0x77 ACK
-#include "LSM303D.h"
+class LSM303D{
 
 
 
-LSM303D LSM;
+    public:
 
-void setup() {
-
-  Wire.begin(); //Join i2c bus
-  Serial.begin(9600); //for Debugging monitor
-  LSM.config();
-
-}
-
-
-
-
-void loop() {
- 
-Serial.print("X Accel: ");
-Serial.print( LSM.Xa());
-Serial.print("    Y Accel: ");
-Serial.print( LSM.Ya());
-Serial.print("    Z Accel: ");
-Serial.print( LSM.Za());
-
-Serial.print("   X Mag: ");
-Serial.print( LSM.Xm());
-Serial.print("    Y Mag: ");
-Serial.print( LSM.Ym());
-Serial.print("    Z Mag: ");
-Serial.print( LSM.Zm());
-Serial.print("    Temp: ");
-Serial.println(LSM.Temp());
-delay(200);
-
-
-
-}
+            int   config(void); //set configuration registers and start data following
+            float Xa(void);//returns X accelerometer data in g's
+            float Ya(void);//returns Y accelerometer data in g's
+            float Za(void);//returns Z accelerometer data in g's
+            float Xm(void);//returns X Magnetometer Data in G's
+            float Ym(void);//returns Y Magnetometer Data in G's
+            float Zm(void);//returns Z Magnetometer Data in G's
+            float Temp(void);// returns Temperture of IC
+            float mapf(int16_t, float, float, float , float ); ///internal scaling function that works with floats
+        
+        
+        private:
+};
