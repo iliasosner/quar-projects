@@ -43,11 +43,13 @@
 //Addr: 0x77 ACK
 #include "LSM303D.h"
 #include "L3GD20.h"
+#include "BMP180.h"
 
 
 
 LSM303D LSM;
 L3GD20 L3G;
+BMP180 BMP;
 
 void setup() {
 
@@ -55,6 +57,8 @@ void setup() {
   Serial.begin(9600); //for Debugging monitor
   LSM.config();
   L3G.config();
+  BMP.config();
+  BMP.cal();
 
 }
 
@@ -79,7 +83,7 @@ Serial.print( LSM.Zm());
 Serial.print("    Temp: ");
 Serial.println(LSM.Temp());
 delay(200);
-*/
+
 
 Serial.print("   X Gyro: ");
 Serial.print( L3G.Xg());
@@ -89,6 +93,10 @@ Serial.print("    Z Gyro: ");
 Serial.print( L3G.Zg());
 Serial.print("    Temp: ");
 Serial.println(L3G.Temp());
+*/
 
+
+BMP.get_data();
+delay(100);
 
 }
