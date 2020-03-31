@@ -44,7 +44,7 @@ class BMP180{
 
     public:
 
-            int   config(void); //set configuration registers and start data following
+            int16_t   configrr(void); //set configuration registers and start data following
             int   cal(void); //Pulls configurtation data from eprom on device
             int16_t read_2bytes(int8_t);
             int8_t write_byte(byte, byte);
@@ -53,6 +53,7 @@ class BMP180{
             int8_t calc_temp(void);
             int8_t calc_pre(void);
             void get_data(void);
+            int16_t read_byte(int8_t);
         
         private:
 
@@ -72,24 +73,23 @@ class BMP180{
         int32_t UP=0;
         
         ///for temp and presure calculations
-        long x1=0;
-        long x2=0;
-        long x3=0;
+        int32_t x1=0;
+        int32_t x2=0;
+        int32_t x3=0;
 
-        long B3=0;
-        long B4=0;
-        long B5=0;
-        long B6=0;
-        long B7=0;
+        int16_t B3=0;
+        uint32_t B4=0;
+        int16_t B5=0;
+        int16_t B6=0;
+        uint32_t B7=0;
 
-        long T=0;
-        long p=0;
+        int16_t T=0;
+        int32_t p=0;
         ////
 
         ////for i2c read and write functions 
-        int X0=0;
-        int X1=0;
-        int X2=0;
+        byte X0=0;
+        byte X1=0;
+        uint16_t X2=0;
         
-
 };

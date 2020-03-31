@@ -3,10 +3,10 @@
  *
  * @file    BMP180.h
  * @author  Ilia Sosner - March 28, 2020
- * @description   This file defines a class and function prototypes for the BMP180 barometer
+ * @description   This file defines class functions for the BMP180 barometer
  * Library. This library utilizes the Wire library for i2c communication. 
  * Functions include setting configuration registers, pulling calibaration, pressure and 
- * tempreture data. 
+ * tempreture data and calculating final values. Currently set at lowest resolution.
  *
  *
  * https://github.com/iliasosner/quar-projects.git
@@ -41,30 +41,50 @@
 #define oss 0 ///0-3 resoultion setting, "oversampling_setting"
 
 
-int BMP180::config(){
+int16_t BMP180::configrr(){
 
+X0=0xF0;
+Serial.println(X0,HEX);
+X1=0x0E;
+Serial.println(X1,HEX);
+X2=X1+(X0<<8);          //combines 2 bytes into a 16-bit signed int
 
+Serial.println(X2,HEX);
+Serial.println(X2);
 
 }
 
 
 
+int16_t BMP180::read_byte(int8_t address){
+    ///////////////////Reads one byte from start address
+        Wire.beginTransmission(ADD); 
+        Wire.write(byte(address)); 
+        Wire.endTransmission(); 
+        Wire.requestFrom(ADD,1);
+             if(Wire.available()){
+                X0=Wire.read();
+            }
+     
+        return X0;
+}
+
 
 
 
 int16_t BMP180::read_2bytes(int8_t address){
-    ///////////////////Reads tw0 consecutive bytes from start address
+    ///////////////////Reads two consecutive bytes from start address
         Wire.beginTransmission(ADD); 
         Wire.write(byte(address)); 
         Wire.endTransmission(); 
-        Wire.requestFrom(address,1);
+        Wire.requestFrom(ADD,1);
              if(Wire.available()){
                 X0=Wire.read();
             }
         Wire.beginTransmission(ADD); 
         Wire.write(byte(address+0x01)); 
         Wire.endTransmission();
-        Wire.requestFrom(address+0x01,1);
+        Wire.requestFrom(ADD,1);
             if(Wire.available()){
               X1=Wire.read();
             }
@@ -89,19 +109,27 @@ int8_t BMP180::write_byte(byte address, byte data){
 int BMP180::cal(){
 
         AC1= read_2bytes(0xAA);
+        delay(200);
         AC2= read_2bytes(0xAC);
+        delay(200);
         AC3= read_2bytes(0xAE);
+        delay(200);
         AC4= read_2bytes(0xB0);
+        delay(200);
         AC5= read_2bytes(0xB2);
+        delay(200);
         AC6= read_2bytes(0xB4);
-       
-        B2= read_2bytes(0xB8);
-        MB= read_2bytes(0xBA);
-        MC= read_2bytes(0xBC);
-        MD= read_2bytes(0xBE);
-
+        delay(200);
         BB1=  read_2bytes(0xB6);
-
+        delay(200);
+        B2= read_2bytes(0xB8);
+        delay(200);
+        MB= read_2bytes(0xBA);
+        delay(200);
+        MC= read_2bytes(0xBC);
+        delay(200);
+        MD= read_2bytes(0xBE);
+        delay(200);
 }
 
 
@@ -124,7 +152,7 @@ int8_t BMP180::raw_pre(){
         Wire.beginTransmission(ADD); 
         Wire.write(byte(0xF6)); 
         Wire.endTransmission(); 
-        Wire.requestFrom(0xF6,1);
+        Wire.requestFrom(ADD,1);
             if(Wire.available()){
                 X0=Wire.read();
                 }
@@ -132,7 +160,7 @@ int8_t BMP180::raw_pre(){
         Wire.beginTransmission(ADD); 
         Wire.write(byte(0xF7)); 
         Wire.endTransmission();
-        Wire.requestFrom(0xF7,1);
+        Wire.requestFrom(ADD,1);
             if(Wire.available()){
                 X1=Wire.read();
                 }
@@ -140,13 +168,12 @@ int8_t BMP180::raw_pre(){
         Wire.beginTransmission(ADD); 
         Wire.write(byte(0xF8)); 
         Wire.endTransmission();
-        Wire.requestFrom(0xF8,1);
+        Wire.requestFrom(ADD,1);
             if(Wire.available()){
                 X2=Wire.read();
                 } 
 
-        UT=(((X0<<16)+(X1<<8)+X2)>>(8-oss));
-
+        UP=(((X0<<16)+(X1<<8)+X2)>>(8-oss));
 
 }
 
@@ -168,14 +195,14 @@ int8_t BMP180::calc_pre(){
 
         B6=B5-4000;
         x1=(B2*(B6*B6/pow(2,12)))/pow(2,11);
-        x2=(AC2*B6)/pow(2,11);
+        x2=AC2*B6/pow(2,11);
         x3=x1+x2;
         B3=(((AC1*4+x3)<<oss)+2)/4;
         x1=AC3*B6/pow(2,13);
         x2=(BB1*(B6*B6/pow(2,12)))/pow(2,16);
         x3=((x1+x2)+2)/pow(2,2);
-        B4=AC4*(uint32_t)(x3+32768)/pow(2,15);
-        B7=((uint32_t)UP-B3)*(50000>>oss);
+        B4=AC4*(unsigned long)(x3+32768)/pow(2,15);
+        B7=((unsigned long)UP-B3)*(50000>>oss);
 
             if (B7<0x80000000){
                   p=(B7*2)/B4;
@@ -195,14 +222,14 @@ void BMP180::get_data(){
         raw_temp();
         raw_pre();
         calc_temp();
+
+        Serial.print("Temp is:  ");
+        Serial.print(T);
+
         calc_pre();
 
-
-       Serial.print("Pressure is:  ");
-       Serial.print(p);
-       Serial.print("   Temp is:  ");
-       Serial.println(T);
-
+        Serial.print("    Pressure is:  ");
+        Serial.println(p);
 }
 
 

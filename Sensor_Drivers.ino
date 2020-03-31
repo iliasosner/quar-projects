@@ -38,9 +38,6 @@
 
 //Created in quarantine on 25 March 2020
 //Ilia Sosner 
-//Addr: 0x1D ACK LSM303D 3-Axis Accelerometer and Magnetometer
-//Addr: 0x6B ACK L3GD20 3-axis Gyroscope
-//Addr: 0x77 ACK
 #include "LSM303D.h"
 #include "L3GD20.h"
 #include "BMP180.h"
@@ -55,10 +52,13 @@ void setup() {
 
   Wire.begin(); //Join i2c bus
   Serial.begin(9600); //for Debugging monitor
-  LSM.config();
-  L3G.config();
-  BMP.config();
+  delay(5000);
+  //LSM.config();
+  //L3G.config();
+  Serial.println("Calibrating");
   BMP.cal();
+  Serial.println("Calibration done!");
+  
 
 }
 
@@ -94,9 +94,11 @@ Serial.print( L3G.Zg());
 Serial.print("    Temp: ");
 Serial.println(L3G.Temp());
 */
-
-
-BMP.get_data();
+//Serial.println(BMP.read_byte(0xD0));
+ //Serial.println("main loop!");
+ //BMP.raw_temp();
+ //BMP.raw_pre();
+BMP.get_data(); //prints pressure in pascals and tempreture in 0.1 degree celsius 
 delay(100);
 
 }
