@@ -41,12 +41,14 @@
 #include "LSM303D.h"
 #include "L3GD20.h"
 #include "BMP180.h"
+#include "JoyStick.h"
 
 
 
 LSM303D LSM;
 L3GD20 L3G;
 BMP180 BMP;
+JoyStick Joy;
 
 void setup() {
 
@@ -55,17 +57,26 @@ void setup() {
   delay(5000);
   //LSM.config();
   //L3G.config();
-  Serial.println("Calibrating");
-  BMP.cal();
-  Serial.println("Calibration done!");
+  //Serial.println("Calibrating");
+  //BMP.cal();
+ //Serial.println("Calibration done!");
+ Joy.configrr();
   
-
-}
+  }
 
 
 
 
 void loop() {
+  Serial.print("X-Axis:   ");
+  Serial.print(Joy.X());
+
+  Serial.print("    Y-Axis:   ");
+  Serial.print(Joy.Y());
+
+  Serial.print("    Z-Axis:   ");
+  Serial.println(Joy.Z());
+
  /*
 Serial.print("X Accel: ");
 Serial.print( LSM.Xa());
@@ -98,7 +109,7 @@ Serial.println(L3G.Temp());
  //Serial.println("main loop!");
  //BMP.raw_temp();
  //BMP.raw_pre();
-BMP.get_data(); //prints pressure in pascals and tempreture in 0.1 degree celsius 
-delay(100);
+//BMP.get_data(); //prints pressure in pascals and tempreture in 0.1 degree celsius 
+delay(10);
 
 }
